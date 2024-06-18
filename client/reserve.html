@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reserve</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <nav>
+      <h1>
+        <a href="/">Tawakal Restaurant</a>
+      </h1>
+      <div class="nav" id="nav-links"></div>
+    </nav>
+    <section>
+      <h1>Make a Reservation</h1>
+      <form id="reservation-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+        <label for="guests">Number of Guests:</label>
+        <input type="number" id="guests" name="guests" required />
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required />
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time" required />
+        <label for="menu">Menu:</label>
+        <input type="text" id="menu" name="menu" required />
+        <select id="tableSeat" name="tableSeat" required>
+            <option value="single">Single Seat</option>
+            <option value="double">Double Seat</option>
+            <option value="family-three">Family of Three</option>
+            <option value="family-four">Family of Four</option>
+            <option value="family-five">Family of Five</option>
+        </select>
+        <button type="submit">Reserve</button>
+      </form>
+    </section>
+  </body>
+</html>
