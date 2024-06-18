@@ -161,25 +161,23 @@ document.addEventListener("DOMContentLoaded", function () {
    fetch(`http://localhost:3000/user/getReservation/${user.userRef}`)
      .then((response) => response.json())
      .then((data) => {
-       console.log('Reservation Data:', data); // Log the data for debugging
        if (!data || data.length === 0) {
          reservationDetailsDiv.innerHTML = "<p>No reservation details found</p>";
        } else {
          const reservationsHTML = data.map(reservation => `
            <div class="reservation">
              <p>Name: ${reservation.name || 'N/A'}</p>
+             <p>Table: ${reservation.tableType || 'N/A'}</p>
+             <p>Menu: ${reservation.menu || 'N/A'}</p>
              <p>Guests: ${reservation.guests || 'N/A'}</p>
              <p>Date: ${reservation.date ? new Date(reservation.date).toLocaleDateString() : 'N/A'}</p>
-             <p>Time: ${reservation.time || 'N/A'}</p>
-             <p>Menu: ${reservation.menu || 'N/A'}</p>
-             <p>Table: ${reservation.tableType || 'N/A'}</p>
+             <p>Time: ${reservation.time || 'N/A'}</p> 
            </div>
          `).join('');
          reservationDetailsDiv.innerHTML = reservationsHTML;
        }
      })
      .catch((error) => {
-       console.error("Error fetching reservation details:", error);
        reservationDetailsDiv.innerHTML = "<p>Error fetching reservation details</p>";
      });
  }
