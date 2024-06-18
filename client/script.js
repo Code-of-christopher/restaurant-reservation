@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
-  
-
   // Check if user is logged in
   function checkAuth() {
     return localStorage.getItem("user") !== null;
+  }
+
+  function getUser() {
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
   }
 
   function updateNav() {
@@ -28,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   updateNav();
 
-// Book a Table button functionality
+  // Book a Table button functionality
   const bookTableBtn = document.getElementById("book-table-btn");
   if (bookTableBtn) {
     bookTableBtn.addEventListener("click", function () {
@@ -60,16 +63,19 @@ document.addEventListener("DOMContentLoaded", function () {
           body: JSON.stringify(loginData),
         });
         const result = await response.json();
-        if (response.ok) {
-          alert("Login Successful");
-          localStorage.setItem("user", JSON.stringify(result.user));
-          window.location.href = "/reserve.html";
+        console.log('Login Response:', result);
+        if (result.success === false) {
+          alert(result.message);
         } else {
-          alert("Login Failed: " + result.message);
+          alert("Login Successful");
+          localStorage.setItem(
+            "user",
+            JSON.stringify({ token: result.token, userRef: result._id })
+          );
+          window.location.href = "/reserve.html";
         }
       } catch (error) {
-        console.error("Error:", error);
-        alert("Failed to login");
+        alert(error.message);
       }
     });
   }
@@ -94,16 +100,14 @@ document.addEventListener("DOMContentLoaded", function () {
           body: JSON.stringify(signupData),
         });
         const result = await response.json();
-        if (response.ok) {
-          alert("Sign Up Successful");
-          localStorage.setItem("user", JSON.stringify(result.user));
-          window.location.href = "/login.html";
+        if (result.success === false) {
+          alert(result.message);
         } else {
-          alert("Sign Up Failed: " + result.message);
+          alert("Sign Up Successful");
+          window.location.href = "/login.html";
         }
       } catch (error) {
-        console.error("Error:", error);
-        alert("Failed to sign up");
+        alert(error.message);
       }
     });
   }
@@ -119,8 +123,11 @@ document.addEventListener("DOMContentLoaded", function () {
         reservationData[key] = value;
       });
 
-      const user = JSON.parse(localStorage.getItem("user"));
-      reservationData.userRef = user.id;
+      const user = getUser();
+      console.log('User Object:', user);
+
+      reservationData.userRef = user.userRef;
+      console.log('Reservation Data:', reservationData); 
 
       try {
         const response = await fetch("http://localhost:3000/reserve/create", {
@@ -129,100 +136,51 @@ document.addEventListener("DOMContentLoaded", function () {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.token}`,
           },
-          body: JSON.stringify(reservationData),
+          body: JSON.stringify( reservationData ),
         });
         const result = await response.json();
-        if (response.ok) {
-          alert("Reservation Successful: " + JSON.stringify(result));
+        console.log('Response:', result);
+        if (result.success === false) {
+          alert(result.message);
+        } else {
+          alert("Reservation Successful");
           window.location.href = "/view.html";
           reservationForm.reset();
-        } else {
-          alert("Reservation Failed: " + result.message);
         }
       } catch (error) {
-        console.error("Error:", error);
-        alert("Failed to make reservation");
+        alert(error.message);
       }
     });
   }
 
-  // Display reservation details
-  const reservationDetailsDiv = document.getElementById("reservation-details");
-  if (reservationDetailsDiv) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const reservationId = urlParams.get("id");
+ // Fetch and display reservation details
+ const reservationDetailsDiv = document.getElementById("reservation-details");
+ const user = getUser();
 
-    if (reservationId) {
-      fetch(`http://localhost:3000/reserve/get/${reservationId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          reservationDetailsDiv.innerHTML = `
-                        <p>Name: ${data.name}</p>
-                        <p>Guests: ${data.guests}</p>
-                        <p>Date: ${new Date(data.date).toLocaleDateString()}</p>
-                        <p>Time: ${data.time}</p>
-                        <p>Menu: ${data.menu}</p>
-                        <p>Table: ${data.tableSeat}</p>
-                    `;
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          reservationDetailsDiv.innerHTML =
-            "<p>Error fetching reservation details</p>";
-        });
-    }
-  }
-  router.put("/update/:id", verifyToken, async (req, res, next) => {
-    const { name, guests, date, time, menu, tableSeat } = req.body;
-    try {
-      const reservation = await Reservation.findById(req.params.id);
-      if (!reservation) {
-        return next(errorHandler(404, "Reservation not found"));
-      }
-      if (new Date(reservation.date) - new Date() < 86400000) {
-        return res
-          .status(400)
-          .json({
-            message: "Cannot update reservation less than a day in advance",
-          });
-      }
-      if (req.user.id !== reservation.userRef.toString()) {
-        return next(
-          errorHandler(401, "You can only update your own reservation")
-        );
-      }
-      reservation.name = name;
-      reservation.guests = guests;
-      reservation.date = date;
-      reservation.time = time;
-      reservation.menu = menu;
-      reservation.tableSeat = tableSeat;
-
-      await reservation.save();
-      res
-        .status(200)
-        .json({ message: "Reservation updated successfully", reservation });
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  // Delete a reservation
-  router.delete("/delete/:id", verifyToken, async (req, res, next) => {
-    try {
-      const reservation = await Reservation.findById(req.params.id);
-      if (!reservation) {
-        return next(errorHandler(404, "Reservation not found"));
-      }
-      if (req.user.id !== reservation.userRef.toString()) {
-        return next(
-          errorHandler(401, "You can only delete your own reservation")
-        );
-      }
-      await Reservation.findByIdAndDelete(req.params.id);
-      res.status(200).json("Reservation has been deleted");
-    } catch (error) {
-      next(error);
-    }
-  });
+ if (reservationDetailsDiv) {
+   fetch(`http://localhost:3000/user/getReservation/${user.userRef}`)
+     .then((response) => response.json())
+     .then((data) => {
+       console.log('Reservation Data:', data); // Log the data for debugging
+       if (!data || data.length === 0) {
+         reservationDetailsDiv.innerHTML = "<p>No reservation details found</p>";
+       } else {
+         const reservationsHTML = data.map(reservation => `
+           <div class="reservation">
+             <p>Name: ${reservation.name || 'N/A'}</p>
+             <p>Guests: ${reservation.guests || 'N/A'}</p>
+             <p>Date: ${reservation.date ? new Date(reservation.date).toLocaleDateString() : 'N/A'}</p>
+             <p>Time: ${reservation.time || 'N/A'}</p>
+             <p>Menu: ${reservation.menu || 'N/A'}</p>
+             <p>Table: ${reservation.tableType || 'N/A'}</p>
+           </div>
+         `).join('');
+         reservationDetailsDiv.innerHTML = reservationsHTML;
+       }
+     })
+     .catch((error) => {
+       console.error("Error fetching reservation details:", error);
+       reservationDetailsDiv.innerHTML = "<p>Error fetching reservation details</p>";
+     });
+ }
 });

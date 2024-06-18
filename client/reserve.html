@@ -19,21 +19,20 @@
       <form id="reservation-form">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required />
-        <label for="guests">Number of Guests:</label>
-        <input type="number" id="guests" name="guests" required />
+        <label for="tableType">Table Type:</label>
+        <select id="tableType" name="tableType" required>
+          <option value="single">Single</option>
+          <option value="double">Double</option>
+          <option value="familyOfThree">Family of Three</option>
+          <option value="familyOfFour">Family of Four</option>
+          <option value="familyOfFive">Family of Five</option>
+        </select>
         <label for="date">Date:</label>
         <input type="date" id="date" name="date" required />
         <label for="time">Time:</label>
         <input type="time" id="time" name="time" required />
         <label for="menu">Menu:</label>
         <input type="text" id="menu" name="menu" required />
-        <select id="tableSeat" name="tableSeat" required>
-            <option value="single">Single Seat</option>
-            <option value="double">Double Seat</option>
-            <option value="family-three">Family of Three</option>
-            <option value="family-four">Family of Four</option>
-            <option value="family-five">Family of Five</option>
-        </select>
         <button type="submit">Reserve</button>
       </form>
     </section>

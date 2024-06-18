@@ -2,7 +2,9 @@ import express from "express";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import User from "../models/User.js";
+import Reservation from "../models/Reservation.js";
 import jwt from "jsonwebtoken";
+import { verifyToken } from "../utils/verifyUser.js";
 const router = express.Router();
 
 // User registration
@@ -12,7 +14,7 @@ router.post("/signup", async (req, res, next) => {
   const newUser = new User({ username, email, password: hashedPassword });
   try {
     await newUser.save();
-    res.status(201).json("User created successfully!");
+    res.status(201).json({message: "User Created Successfully", newUser});
   } catch (error) {
     next(error);
   }
@@ -47,6 +49,22 @@ router.get("/logout", (req, res, next) => {
     res.status(200).json("User has been logged out!");
   } catch (error) {
     next(error);
+  }
+});
+
+// Get a reservation
+router.get("/getReservation/:id", verifyToken, async (req, res, next) => {
+  if (req.user.id === req.params.id) {
+  try {
+    const reservation = await Reservation.find({ userRef: req.params.id});
+    if (!reservation) {
+      return next(errorHandler(401, "Reservation not found"));
+    }
+    res.status(200).json(reservation);
+  } catch (error) {
+    next(error);
+  }} else{
+    return next(errorHandler(401, "You can only view your own reservation"));
   }
 });
 

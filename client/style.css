@@ -3,7 +3,7 @@
   margin: 0;
   text-decoration: none;
   outline: none;
-  user-select: none;
+  
   list-style: none;
 }
 
@@ -48,10 +48,10 @@ nav a {
 }
 
 .hero {
+  height: 36dvh;
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   padding: 30px;
   h1 {
@@ -76,21 +76,21 @@ nav a {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  padding-bottom: 22px;
+  height: 48dvh;
 }
 
 .menu-header {
-  display: flex;
-  padding: 24px;
-  justify-content: center;
-  align-items: center;
   h2 {
     color: orange;
+    padding: 24px;
+    text-align: center;
   }
 }
 
 .menu {
   display: flex;
-  width: 86vw;
+  width: 92vw;
   height: 40dvh;
   overflow: scroll;
   .menuList {
@@ -104,7 +104,7 @@ nav a {
       font-weight: 700;
     }
     .list {
-      height: 140px;
+      height: 32dvh;
       overflow: scroll;
       width: 270px;
       li {

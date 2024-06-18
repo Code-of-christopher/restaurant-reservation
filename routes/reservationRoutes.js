@@ -7,41 +7,41 @@ const router = express.Router();
 
 // Table availability structure
 const tables = {
-    single: 10,
-    double: 5,
-    familyOfThree: 10,
-    familyOfFour: 5,
-    familyOfFive: 6
+  single: 10,
+  double: 5,
+  familyOfThree: 10,
+  familyOfFour: 5,
+  familyOfFive: 6,
 };
 
-const getTableType = (guests) => {
-    if (guests === 1) return 'single';
-    if (guests === 2) return 'double';
-    if (guests === 3) return 'familyOfThree';
-    if (guests === 4) return 'familyOfFour';
-    if (guests === 5) return 'familyOfFive';
-    return null;
+const getGuestsFromTableType = (tableType) => {
+  switch (tableType) {
+    case 'single': return 1;
+    case 'double': return 2;
+    case 'familyOfThree': return 3;
+    case 'familyOfFour': return 4;
+    case 'familyOfFive': return 5;
+    default: return 0;
+  }
 };
 
 // Create a new reservation
 router.post("/create", verifyToken, async (req, res, next) => {
   try {
-    const { name, guests, date, time, menu, userRef } = req.body;
-    const tableType = getTableType(guests);
+    const { name, tableType, date, time, menu, userRef } = req.body;
 
-    if (!tableType) {
-      return res.status(400).json({ message: "Invalid number of guests" });
+    if (!tables[tableType]) {
+      return res.status(400).json({ message: "Invalid table type" });
     }
 
-    // Check table availability
     if (tables[tableType] <= 0) {
-      return res.status(400).json({ message: "No available tables for this size" });
+      return res.status(400).json({ message: "No available tables for this type" });
     }
 
+    const guests = getGuestsFromTableType(tableType);
     const reservation = new Reservation({ name, guests, date, time, menu, tableType, userRef });
     await reservation.save();
 
-    // Decrement the table count
     tables[tableType]--;
 
     res.status(201).json({ message: "Seats Reserved Successfully", reservation });
@@ -50,22 +50,9 @@ router.post("/create", verifyToken, async (req, res, next) => {
   }
 });
 
-// Get a reservation
-router.get("/get/:id", async (req, res, next) => {
-  try {
-    const reservation = await Reservation.findById(req.params.id);
-    if (!reservation) {
-      return next(errorHandler(401, "Reservation not found"));
-    }
-    res.status(200).json(reservation);
-  } catch (error) {
-    next(error);
-  }
-});
-
 // Update a reservation
 router.put("/update/:id", verifyToken, async (req, res, next) => {
-  const { name, guests, date, time, menu, userRef } = req.body;
+  const { name, tableType, date, time, menu, userRef } = req.body;
   try {
     const reservation = await Reservation.findById(req.params.id);
     if (!reservation) {
@@ -78,31 +65,29 @@ router.put("/update/:id", verifyToken, async (req, res, next) => {
       });
     }
 
-    const oldTableType = reservation.tableType;
-    const newTableType = getTableType(guests);
-
-    if (!newTableType) {
-      return res.status(400).json({ message: "Invalid number of guests" });
+    if (!tables[tableType]) {
+      return res.status(400).json({ message: "Invalid table type" });
     }
 
-    if (oldTableType !== newTableType && tables[newTableType] <= 0) {
-      return res.status(400).json({ message: "No available tables for this size" });
+    if (reservation.tableType !== tableType && tables[tableType] <= 0) {
+      return res.status(400).json({ message: "No available tables for this type" });
     }
+
+    const guests = getGuestsFromTableType(tableType);
 
     reservation.name = name;
     reservation.guests = guests;
     reservation.date = date;
     reservation.time = time;
     reservation.menu = menu;
-    reservation.tableType = newTableType;
+    reservation.tableType = tableType;
     reservation.userRef = userRef;
 
     await reservation.save();
 
-    // Update table counts if table type has changed
-    if (oldTableType !== newTableType) {
-      tables[oldTableType]++;
-      tables[newTableType]--;
+    if (reservation.tableType !== tableType) {
+      tables[reservation.tableType]++;
+      tables[tableType]--;
     }
 
     res.status(201).json({ message: "Reservation updated successfully", reservation });
