@@ -107,7 +107,7 @@ nav a {
       font-weight: 700;
     }
     .list {
-      height: calc(100% - 40px);
+      height: 30dvh;
       overflow: scroll;
       width: 270px;
       li {

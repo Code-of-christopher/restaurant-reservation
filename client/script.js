@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
        } else {
          const reservationsHTML = data.map(reservation => `
            <div class="reservation">
-             <p>Name: ${reservation.name || 'N/A'}</p>
+             <p>Name: ${reservation.name || 'Empty'}</p>
              <p>Table: ${reservation.tableType || 'N/A'}</p>
              <p>Menu: ${reservation.menu || 'N/A'}</p>
              <p>Guests: ${reservation.guests || 'N/A'}</p>
