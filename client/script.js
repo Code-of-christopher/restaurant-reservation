@@ -157,21 +157,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const reservationDetailsDiv = document.getElementById("reservation-details");
   const user = getUser();
 
- if (reservationDetailsDiv) {
-   fetch(`http://localhost:3000/user/getReservation/${user.userRef}`)
-     .then((response) => response.json())
-     .then((data) => {
-       if (!data || data.length === 0) {
-         reservationDetailsDiv.innerHTML = "<p>No reservation details found</p>";
-       } else {
-         const reservationsHTML = data.map(reservation => `
-           <div class="reservation">
-             <p>Name: ${reservation.name || 'N/A'}</p>
-             <p>Table: ${reservation.tableType || 'N/A'}</p>
-             <p>Menu: ${reservation.menu || 'N/A'}</p>
-             <p>Guests: ${reservation.guests || 'N/A'}</p>
-             <p>Date: ${reservation.date ? new Date(reservation.date).toLocaleDateString() : 'N/A'}</p>
-             <p>Time: ${reservation.time || 'N/A'}</p> 
+  if (reservationDetailsDiv) {
+    fetch(`http://localhost:3000/user/getReservation/${user.userRef}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data || data.length === 0) {
+          reservationDetailsDiv.innerHTML =
+            "<p>No reservation details found</p>";
+        } else {
+          const reservationsHTML = data
+            .map(
+              (reservation) => `
+           <div class="reservation" data-id="${reservation._id}">
+             <p>Name: ${reservation.name || "N/A"}</p>
+             <p>Table: ${reservation.tableType || "N/A"}</p>
+             <p>Menu: ${reservation.menu || "N/A"}</p>
+             <p>Guests: ${reservation.guests || "N/A"}</p>
+             <p>Date: ${reservation.date ? new Date(reservation.date).toLocaleDateString() : "N/A"}</p>
+             <p>Time: ${reservation.time || "N/A"}</p> 
+             <button class="update-btn">Update</button>
+             <button class="delete-btn">Delete</button>
            </div>
          `
             )
