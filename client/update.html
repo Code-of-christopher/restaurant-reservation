@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Reservation</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav>
+      <h1>
+        <a href="/">Tawakal Restaurant</a>
+      </h1>
+      <div class="nav" id="nav-links"></div>
+    </nav>
+    
+    <section class="reserve" id="update-reservation-section">
+      <h1>Update Reservation</h1>
+      <form id="update-reservation-form">
+        <input type="hidden" id="update-reservation-id" name="reservationId" />
+        <label for="update-name">Name:</label>
+        <input type="text" id="update-name" name="name" required />
+        <label for="update-tableType">Table Type:</label>
+        <select id="update-tableType" name="tableType" required>
+          <option value="single">Single</option>
+          <option value="double">Double</option>
+          <option value="family Of Three">Family of Three</option>
+          <option value="family Of Four">Family of Four</option>
+          <option value="family Of Five">Family of Five</option>
+        </select>
+        <label for="update-date">Date:</label>
+        <input type="date" id="update-date" name="date" required />
+        <label for="update-time">Time:</label>
+        <input type="time" id="update-time" name="time" required />
+        <label for="update-menu">Menu:</label>
+        <input type="text" id="update-menu" name="menu" required />
+        <button type="submit">Update</button>
+      </form>
+    </section>
+    <script src="script.js"></script>
+  </body>
+</html>

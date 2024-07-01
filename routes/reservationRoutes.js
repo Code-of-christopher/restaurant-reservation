@@ -50,6 +50,22 @@ router.post("/create", verifyToken, async (req, res, next) => {
   }
 });
 
+router.get("/getReservation/:id", verifyToken, async (req, res, next) => {
+  try {
+    const reservation = await Reservation.findById(req.params.id);
+    if (!reservation) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    if (req.user.id!== reservation.userRef) {
+      return res.status(401).json({ message: "You can only view your own reservation" });
+    }
+
+    res.status(200).json(reservation);
+  } catch (error) {
+    next(error);
+  }
+})
 // Update a reservation
 router.put("/update/:id", verifyToken, async (req, res, next) => {
   const { name, tableType, date, time, menu, userRef } = req.body;
@@ -57,6 +73,10 @@ router.put("/update/:id", verifyToken, async (req, res, next) => {
     const reservation = await Reservation.findById(req.params.id);
     if (!reservation) {
       return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    if (req.user.id !== reservation.userRef) {
+      return res.status(401).json({ message: "You can only update your own reservation" });
     }
 
     if (new Date(reservation.date) - new Date() < 86400000) {
