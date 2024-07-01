@@ -1,4 +1,71 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const muslimFoods = [
+    {
+      name: "Biryani",
+      description: "A flavorful rice dish cooked with spices, meat (usually chicken or mutton), and sometimes vegetables.",
+    },
+    {
+      name: "Kebab",
+      description: "Skewered and grilled meat, often seasoned with spices and herbs, popular across many Muslim cultures.",
+    },
+    {
+      name: "Hummus",
+      description: "A dip or spread made from mashed chickpeas, blended with tahini, olive oil, lemon juice, salt, and garlic.",
+    },
+    {
+      name: "Falafel",
+      description: "Deep-fried balls made from ground chickpeas or fava beans, often served in pita bread or with salads.",
+    },
+    {
+      name: "Shawarma",
+      description: "Thinly sliced meat (often chicken, beef, or lamb) wrapped in pita bread with vegetables and sauce.",
+    },
+    {
+      name: "Kofta",
+      description: "Minced meat (usually beef or lamb) mixed with spices and onions, shaped into balls or patties and grilled.",
+    },
+    {
+      name: "Tabbouleh",
+      description: "A Levantine vegetarian salad made of finely chopped parsley, tomatoes, mint, onion, and soaked bulgur.",
+    },
+    {
+      name: "Maqluba",
+      description: "An upside-down rice and vegetable casserole dish originating from the Levant, often containing meat.",
+    },
+    {
+      name: "Samboosa",
+      description: "Triangular pastries filled with spiced meats, vegetables, or lentils, commonly fried and served as snacks.",
+    },
+    {
+      name: "Lentil Soup",
+      description: "A hearty soup made from lentils, often flavored with spices and sometimes with added vegetables or meat.",
+    },
+    {
+      name: "Mandi",
+      description: "A traditional Yemeni dish made with rice, meat (often lamb), and a mixture of spices, all cooked in a tandoor.",
+    },
+    {
+      name: "Kabsa",
+      description: "A mixed rice dish with meat (such as chicken, lamb, or fish), cooked with aromatic spices and often garnished with nuts and raisins.",
+    },
+    {
+      name: "Pilaf (Pilau)",
+      description: "A dish in which rice is cooked in a seasoned broth, often with meat and/or vegetables, popular in various Muslim cuisines.",
+    },
+    {
+      name: "Harira",
+      description: "A hearty Moroccan soup made with tomatoes, lentils, chickpeas, herbs, and often meat, traditionally eaten during Ramadan.",
+    },
+    {
+      name: "Kunafa",
+      description: "A Middle Eastern cheese pastry soaked in sweet, sugar-based syrup, often layered with nuts and served warm.",
+    },
+    {
+      name: "Basbousa",
+      description: "A sweet cake made from semolina, soaked in simple syrup, and often flavored with coconut or almonds, popular in Arab cuisine.",
+    },
+  ];
+
   // Check if user is logged in
   function checkAuth() {
     return localStorage.getItem("user") !== null;
@@ -43,6 +110,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  const menuSection = document.querySelector(".menu");
+
+  if (menuSection) {
+    const foods = [...muslimFoods, ...muslimFoods];
+
+    foods.forEach((food) => {
+      const menuList = document.createElement("div");
+      menuList.classList.add("menuList");
+
+      const foodTitle = document.createElement("h3");
+      foodTitle.textContent = food.name;
+
+      const foodDescription = document.createElement("p");
+      foodDescription.textContent = food.description;
+
+      menuList.appendChild(foodTitle);
+      menuList.appendChild(foodDescription);
+
+      menuSection.appendChild(menuList);
+    });
+  } else {
+    console.error("Menu section not found.");
+  }
+
   // Handle login
   const loginForm = document.getElementById("login-form");
   if (loginForm) {
@@ -68,10 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
           alert(result.message);
         } else {
           alert("Login Successful");
-          localStorage.setItem(
-            "user",
-            JSON.stringify({ token: result.token, userRef: result._id })
-          );
+          localStorage.setItem("user", JSON.stringify({ token: result.token, userRef: result._id }));
           window.location.href = "/reserve.html";
         }
       } catch (error) {
@@ -162,8 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         if (!data || data.length === 0) {
-          reservationDetailsDiv.innerHTML =
-            "<p>No reservation details found</p>";
+          reservationDetailsDiv.innerHTML = "<p><center>No reservation details found</center></p>";
         } else {
           const reservationsHTML = data
             .map(
@@ -183,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .join("");
           reservationDetailsDiv.innerHTML = reservationsHTML;
 
-          document.querySelectorAll(".update-btn").forEach(button => {
+          document.querySelectorAll(".update-btn").forEach((button) => {
             button.addEventListener("click", function () {
               const reservationDiv = button.closest(".reservation");
               const reservationId = reservationDiv.dataset.id;
@@ -191,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
           });
 
-          document.querySelectorAll(".delete-btn").forEach(button => {
+          document.querySelectorAll(".delete-btn").forEach((button) => {
             button.addEventListener("click", async function () {
               const reservationDiv = button.closest(".reservation");
               const reservationId = reservationDiv.dataset.id;
@@ -218,8 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       })
       .catch((error) => {
-        reservationDetailsDiv.innerHTML =
-          "<p>Error fetching reservation details</p>";
+        reservationDetailsDiv.innerHTML = "<p>Error fetching reservation details</p>";
       });
   }
 

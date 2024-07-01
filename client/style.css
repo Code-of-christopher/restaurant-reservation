@@ -3,13 +3,13 @@
   margin: 0;
   text-decoration: none;
   outline: none;
-
   list-style: none;
+  overflow: hidden;
 }
 
 body {
-  width: 100dvw;
-  height: 100dvh;
+  width: 100vw;
+  height: 100vh;
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   background: url("public/background.jpg");
@@ -17,15 +17,17 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 }
+
 nav {
   display: flex;
   padding: 20px 60px;
   justify-content: space-between;
   align-items: center;
   background: black;
-  h1 {
-    color: orange;
-  }
+}
+
+nav h1 {
+  color: orange;
 }
 
 .nav {
@@ -38,6 +40,7 @@ nav {
 nav a {
   color: orange;
 }
+
 .nav a:hover {
   text-decoration: underline;
 }
@@ -53,21 +56,23 @@ nav a {
   justify-content: space-evenly;
   align-items: center;
   padding: 30px;
-  h1 {
-    font-size: 60px;
-    color: orange;
-    text-align: center;
-  }
-  button {
-    color: orange;
-    font-size: medium;
-    font-weight: bold;
-    width: 132px;
-    padding: 12px;
-    border-radius: 16px;
-    background-color: transparent;
-    box-shadow: 0 5px 20px 15px rgba(0, 0, 0, 0.9);
-  }
+}
+
+.hero h1 {
+  font-size: 60px;
+  color: orange;
+  text-align: center;
+}
+
+.hero button {
+  color: orange;
+  font-size: medium;
+  font-weight: bold;
+  width: 132px;
+  padding: 12px;
+  border-radius: 16px;
+  background-color: transparent;
+  box-shadow: 0 5px 20px 15px rgba(0, 0, 0, 0.9);
 }
 
 .dishes {
@@ -78,64 +83,51 @@ nav a {
   align-items: center;
   padding-bottom: 22px;
   height: 48dvh;
+  width: 100%;
 }
 
-.menu-header {
-  h2 {
-    color: orange;
-    padding: 24px;
-    text-align: center;
-  }
+.menu-header h2 {
+  color: orange;
+  padding: 24px;
+  text-align: center;
 }
 
 .menu {
+  overflow-x: auto;
+  width: 100%;
   display: flex;
-  overflow: hidden;
-  position: relative;
-  width: 100vw;
-  height: 40dvh;
-  .menuList {
-    background-color: orange;
-    border-radius: 20px;
-    margin: 0 12px;
-    height: 35dvh;
-    flex: 0 0 auto;
-    animation: scroll 20s linear infinite;
-    h3 {
-      padding: 20px;
-      text-align: center;
-      font-weight: 700;
-    }
-    .list {
-      height: 30dvh;
-      overflow: scroll;
-      width: 270px;
-      li {
-        text-align: center;
-        padding: 6px 0;
-        font-family: fantasy;
-        font-size: large;
-      }
-    }
-  }
+  align-items: center;
+  gap: 30px;
+  padding: 10px;
 }
 
-@keyframes scroll {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-400%);
-  }
+.menuList {
+  background-color: orange;
+  border-radius: 20px;
+  padding: 10px;
+  width: 200px;
+  height: 30dvh;
+  flex-shrink: 0;
 }
 
-.login,
-.signup {
-  h1 {
-    text-align: center;
-    padding: 6px 0;
-    color: orange;
-  }
+.menuList h3 {
+  padding: 20px;
+  font-weight: 700;
+}
+
+.menuList p {
+  font-family: cursive;
+}
+
+/* Other styles remain unchanged */
+
+.login, .signup {
+  text-align: center;
+}
+
+.login h1, .signup h1 {
+  padding: 6px 0;
+  color: orange;
 }
 
 form {
@@ -152,9 +144,7 @@ label {
   margin-top: 10px;
 }
 
-input,
-select,
-button {
+input, select, button {
   width: 94%;
   padding: 8px;
   margin-top: 5px;
@@ -170,13 +160,14 @@ button {
 .reserve {
   height: 92.8dvh;
   background: rgba(0, 0, 0, 0.4);
-  h1 {
-    text-align: center;
-    font-weight: 900;
-    font-size: 36px;
-    color: orange;
-    padding: 24px;
-  }
+}
+
+.reserve h1 {
+  text-align: center;
+  font-weight: 900;
+  font-size: 36px;
+  color: orange;
+  padding: 24px;
 }
 
 #reservation-details {
