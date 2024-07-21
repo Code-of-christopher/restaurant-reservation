@@ -82,13 +82,14 @@ nav a {
   justify-content: space-evenly;
   align-items: center;
   padding-bottom: 22px;
-  height: 48dvh;
+  height: 40dvh;
   width: 100%;
 }
 
 .menu-header h2 {
   color: orange;
   padding: 24px;
+  margin-bottom: 32px;
   text-align: center;
 }
 
@@ -102,21 +103,23 @@ nav a {
 }
 
 .menuList {
-  background-color: orange;
-  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.705);
   padding: 10px;
   width: 200px;
-  height: 30dvh;
+  height: 36dvh;
   flex-shrink: 0;
+  font-weight: 700;
+  text-align: center;
 }
 
 .menuList h3 {
+  margin-top: 16px;
   padding: 20px;
-  font-weight: 700;
 }
 
 .menuList p {
   font-family: cursive;
+  font-size: larger;
 }
 
 /* Other styles remain unchanged */
