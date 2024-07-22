@@ -163,6 +163,7 @@ button {
 .reserve {
   height: 92.8dvh;
   background: rgba(0, 0, 0, 0.4);
+  overflow: scroll;
 }
 
 .reserve h1 {
