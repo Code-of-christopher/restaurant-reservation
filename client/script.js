@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-  const reservationsListDiv = document.getElementById("reservations-list");
+  const reservationsListDiv = document.getElementById("reservation-list");
 
   if (reservationsListDiv && user && user.userRef === "admin") {
     fetch("http://localhost:3000/reserve/getReservations", {
