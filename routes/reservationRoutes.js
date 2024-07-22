@@ -9,18 +9,18 @@ const router = express.Router();
 const tables = {
   single: 10,
   double: 5,
-  familyOfThree: 10,
-  familyOfFour: 5,
-  familyOfFive: 6,
+  family_of_Three: 10,
+  family_of_four: 5,
+  family_of_five: 6,
 };
 
 const getGuestsFromTableType = (tableType) => {
   switch (tableType) {
     case 'single': return 1;
     case 'double': return 2;
-    case 'familyOfThree': return 3;
-    case 'familyOfFour': return 4;
-    case 'familyOfFive': return 5;
+    case 'family_of_Three': return 3;
+    case 'family_of_four': return 4;
+    case 'family_of_five': return 5;
     default: return 0;
   }
 };
@@ -50,6 +50,19 @@ router.post("/create", verifyToken, async (req, res, next) => {
   }
 });
 
+router.get("/getReservations/", verifyToken, async (req, res, next) => {
+  try {
+    const reservations = await Reservation.find();
+    if (!reservations) {
+      return res.status(404).json({ message: "No Reservations" });
+    }
+
+    res.status(200).json(reservations);
+  } catch (error) {
+    next(error);
+  }
+})
+
 router.get("/getReservation/:id", verifyToken, async (req, res, next) => {
   try {
     const reservation = await Reservation.findById(req.params.id);
@@ -66,6 +79,7 @@ router.get("/getReservation/:id", verifyToken, async (req, res, next) => {
     next(error);
   }
 })
+
 // Update a reservation
 router.put("/update/:id", verifyToken, async (req, res, next) => {
   const { name, tableType, date, time, menu, userRef } = req.body;

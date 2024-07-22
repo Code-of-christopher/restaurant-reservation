@@ -113,9 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const menuSection = document.querySelector(".menu");
 
   if (menuSection) {
-    const foods = [...muslimFoods, ...muslimFoods];
-
-    foods.forEach((food) => {
+    muslimFoods.forEach((food) => {
       const menuList = document.createElement("div");
       menuList.classList.add("menuList");
 
