@@ -33,7 +33,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function updateNav() {
     const navLinks = document.getElementById("nav-links");
-    if (checkAuth()) {
+    const user = getUser();
+
+  if (user && user.token === "adminToken") {
+    navLinks.innerHTML = `
+      <a href="#" id="logout-link">Logout</a>
+    `;
+    document.getElementById("logout-link").addEventListener("click", () => {
+      localStorage.removeItem("user");
+      window.location.href = "/";
+    });
+  } else if (checkAuth()) {
       navLinks.innerHTML = `
         <a href="/reserve.html">Reserve</a>
         <a href="/view.html">Reserved</a>
@@ -244,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener("click", (e) => {
               const reservationDiv = e.target.closest(".reservation");
               const reservationId = reservationDiv.getAttribute("data-id");
-              window.location.href = `/updateReservation.html?id=${reservationId}`;
+              window.location.href = `/update.html?id=${reservationId}`;
             });
           });
         }
@@ -260,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const reservationId = urlParams.get("id");
 
-    fetch(`http://localhost:3000/reserve/get/${reservationId}`, {
+    fetch(`http://localhost:3000/reserve/getReservation/${reservationId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -292,7 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       try {
         const response = await fetch(`http://localhost:3000/reserve/update/${reservationId}`, {
-          method: "PATCH",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.token}`
